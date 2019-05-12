@@ -11,7 +11,7 @@ class Color(Enum):
 
 @unique
 class Rank(Enum):
-  ACE, TWO, THREE, FOUR, FIVE, SIX, SEVEN, EIGHT, NINE, TEN, JACK, QUEEN, KING = range(13)
+  ACE, SEVEN, EIGHT, NINE, TEN, JACK, QUEEN, KING = range(8)
 
 
 class Card:
@@ -37,6 +37,7 @@ class Deck(ListCards):
     self.topcard : Optional[Card] = None
 
   def draw(self) -> Card:
+    self.topcard = None
     return self.cards.pop()
 
   def shuffle(self) -> None:
@@ -62,7 +63,7 @@ class Trick(ListCards):
 
 
 if __name__ == "__main__":
-  card = Card(Color.CLUBS, Rank.FIVE)
+  card = Card(Color.CLUBS, Rank.ACE)
   print(card)
 
   card2 = Card(Color.HEARTS, Rank.TEN)

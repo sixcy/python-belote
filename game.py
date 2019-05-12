@@ -1,6 +1,24 @@
+from typing import List, Optional
 from cards import *
 from table import Table
 from player import Player
+
+class Gamestate:
+  def __init__(self, table: Table, first_player: Player) -> None:
+    self.table = table
+    self.first_player = first_player
+    self.atout : Optional[Color] = None
+
+  @property
+  def iter_players(self) -> List[Player]:
+    first_player_index = self.table.players.index(self.first_player)
+    return list_rotate(self.table.players, first_player_index)
+
+  def __str__(self) -> str:
+    return ("{ table: " + str(self.table)
+            + ", \nfirst player: " + str(self.first_player.name)
+            + ", \natout: " + str(self.atout) + "}")
+
 
 def init_deck() -> Deck:
   L : List[Card] = []
@@ -10,10 +28,6 @@ def init_deck() -> Deck:
   return Deck(L)
 
 ## PLAN
-#
-# Situation C:
-#   1) Situation B
-#   2) The top card of the deck is revealed and put faceup
 #
 # Situation D:
 #   1) Situation C
@@ -34,18 +48,14 @@ def game_loop() -> None:
   deck = init_deck()
   deck.shuffle()
   table = Table([Player("South"), Player("West"), Player("North"), Player("East")], deck)
+  state = Gamestate(table, random.choice(table.players))
 
-  first_player_i = random.randint(0, len(table.players))
-
-  print("Initial state:\n", table)
-  print(80*"-")
-  print("First player:", table.players[first_player_i], "\n")
+  print("Initial state:\n", state)
   print(80*"-")
 
   # Drawing phase
-  iter_players = list_rotate(table.players, first_player_i)
   for i in range(2): # Two draw turns
-    for player in iter_players:
+    for player in state.iter_players:
       n_card = 3 if i == 0 else 2
       for j in range(n_card):
         player.draw(deck)
@@ -53,5 +63,12 @@ def game_loop() -> None:
   # Revealing top card of the deck
   table.deck.reveal()
 
-  print("Final state: ", table)
+  # First player takes it
+  assert table.deck.topcard is not None
+  state.atout = table.deck.topcard.color
+  for player in state.iter_players:
+    for j in range(3):
+      player.draw(deck)
+
+  print("Final state: ", state)
   print(80*"-")
