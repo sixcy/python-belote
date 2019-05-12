@@ -1,5 +1,5 @@
 from enum import Enum, unique
-from typing import List
+from typing import List, Optional
 from utils import *
 from collections import namedtuple
 import random
@@ -34,12 +34,19 @@ class ListCards:
 class Deck(ListCards):
   def __init__(self, cards: List[Card] = []) -> None:
     ListCards.__init__(self, cards)
+    self.topcard : Optional[Card] = None
 
   def draw(self) -> Card:
     return self.cards.pop()
 
   def shuffle(self) -> None:
     random.shuffle(self.cards)
+
+  def reveal(self) -> None:
+    self.topcard = self.cards[-1]
+
+  def __str__(self) -> str:
+    return "{ \ncards: " + ListCards.__str__(self) + ", \ntopcard: " + str(self.topcard) + "}"
 
 
 class Hand(ListCards):

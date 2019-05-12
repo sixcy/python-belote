@@ -1,8 +1,10 @@
 MAIN=main
 
+PYFILES=$(wildcard *.py)
+
 all: $(MAIN).tok
 
-%.tok: %.py
+%.tok: $(MAIN).py $(PYFILES)
 	@mypy $< && touch $@
 
 .PHONY:
