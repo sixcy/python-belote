@@ -2,6 +2,7 @@ from enum import Enum, unique
 from typing import List
 from printing import *
 from collections import namedtuple
+import random
 
 @unique
 class Color(Enum):
@@ -36,6 +37,9 @@ class Deck(ListCards):
 
   def draw(self) -> Card:
     return self.cards.pop()
+
+  def shuffle(self) -> None:
+    random.shuffle(self.cards)
 
 
 class Hand(ListCards):

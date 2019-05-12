@@ -3,6 +3,9 @@
 from game import *
 from table import Table
 from player import Player
+import random
+
+random.seed(0) # same seed for now
 
 ## PLAN
 #
@@ -35,6 +38,7 @@ from player import Player
 ##
 
 deck = init_deck()
+deck.shuffle()
 table = Table([Player("South"), Player("West"), Player("North"), Player("East")], deck)
 
 print("Initial state:\n", table)
